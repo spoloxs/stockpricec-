@@ -6,15 +6,13 @@
 #include <vector>
 #include <json/json.h>
 
-using namespace std::chrono_literals;
-
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
     ((std::string*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
 }
 
-std::vector<float> getdatalow(){
+std::vector<float> getdatalow(std::string url){
     CURL *curl;
     CURL *multi_curl;
     CURLMcode res;
@@ -24,7 +22,7 @@ std::vector<float> getdatalow(){
     curl = curl_easy_init();
     std::vector<float> _templist;
     if(curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, "https://query1.finance.yahoo.com/v8/finance/chart/TSLA?interval=1m");
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
         curl_multi_add_handle(multi_curl, curl);
@@ -52,7 +50,7 @@ std::vector<float> getdatalow(){
     return(_templist);
 }
 
-std::vector<float> getdatahigh(){
+std::vector<float> getdatahigh(std::string url){
     CURL *curl;
     CURL *multi_curl;
     CURLMcode res;
@@ -62,7 +60,7 @@ std::vector<float> getdatahigh(){
     curl = curl_easy_init();
     std::vector<float> _templist;
     if(curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, "https://query1.finance.yahoo.com/v8/finance/chart/TSLA?interval=1m");
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
         curl_multi_add_handle(multi_curl, curl);
@@ -90,7 +88,7 @@ std::vector<float> getdatahigh(){
     return(_templist);
 }
 
-std::vector<float> getdataclose(){
+std::vector<float> getdataclose(std::string url){
     CURL *curl;
     CURL *multi_curl;
     CURLMcode res;
@@ -100,7 +98,7 @@ std::vector<float> getdataclose(){
     curl = curl_easy_init();
     std::vector<float> _templist;
     if(curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, "https://query1.finance.yahoo.com/v8/finance/chart/TSLA?interval=1m");
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
         curl_multi_add_handle(multi_curl, curl);
@@ -128,7 +126,7 @@ std::vector<float> getdataclose(){
     return(_templist);
 }
 
-std::vector<float> getdataopen(){
+std::vector<float> getdataopen(std::string url){
     CURL *curl;
     CURL *multi_curl;
     CURLMcode res;
@@ -138,7 +136,7 @@ std::vector<float> getdataopen(){
     curl = curl_easy_init();
     std::vector<float> _templist;
     if(curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, "https://query1.finance.yahoo.com/v8/finance/chart/TSLA?interval=1m");
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
         curl_multi_add_handle(multi_curl, curl);
@@ -168,6 +166,10 @@ std::vector<float> getdataopen(){
 
 int main(void)
 {  
+    std::string stockname;
+    std::cout << "Enter the name of stock: ";
+    std::cin >> stockname;
+    std::string url = "https://query1.finance.yahoo.com/v8/finance/chart/" + stockname + "?interval=1m";
     time_t start, end;
     double elapsed, prev_elapsed = 0.0;
     time(&start);
@@ -177,14 +179,16 @@ int main(void)
         elapsed = difftime(end, start);
         if (elapsed >= prev_elapsed+2.0)
             {
-                std::vector <float> listhigh = getdatahigh();
-                std::vector <float> listclose = getdataclose();
-                std::vector <float> listopen = getdataopen();
-                std::vector <float> listlow = getdatalow();
+                std::vector <float> listhigh = getdatahigh(url);
+                std::vector <float> listclose = getdataclose(url);
+                std::vector <float> listopen = getdataopen(url);
+                std::vector <float> listlow = getdatalow(url);
                 system("clear");
-                std::cout << "|  open  |  close |  low  |  high  |" << std::endl;
+                std::cout << "|  open: | close: |  low: |  high: |" << std::endl;
                 std::cout << "| " << listopen.back() << " | " << listclose.back() << " | " << listlow.back() << " | " << listhigh.back()<< " |" << std::endl;
+                std::cout << std::endl;
+                std::cout << "enter something" << std::endl;
                 prev_elapsed = elapsed;
             }
-    } while(elapsed < 40.0);
+    } while(1 == 1);
 }
