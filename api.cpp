@@ -2,10 +2,8 @@
 #include <string>
 #include <curl/curl.h>
 #include <cstring>
-#include <future>
 #include <vector>
 #include <json/json.h>
-#include <chrono>
 #include <map>
 
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
@@ -59,34 +57,4 @@ std::string epoch_to_utc(float epoch) {
   const time_t old = (time_t)epoch;
   struct tm *oldt = localtime(&old);
   return asctime(oldt);
-}
-
-
-int main(void)
-{  
-    std::string stockname = "AAPL";
-    //std::cout << "Enter the name of stock: ";
-    //std::cin >> stockname;
-    time_t start, end;
-    double elapsed, prev_elapsed = 0.0;
-    time(&start);
-    do
-    {
-        time(&end);
-        elapsed = difftime(end, start);
-        if (elapsed >= prev_elapsed+2)
-            {
-                uint64_t sec = std::chrono::system_clock::now().time_since_epoch().count() + 1;
-                std::ostringstream oss;
-                oss << sec;
-                std::string url = "https://query1.finance.yahoo.com/v8/finance/chart/" + stockname + "?interval=1m" + "&period2=" + oss.str() +"&includePrePost=true";
-                std:: map tempmap = getdata(url);
-                system("clear");
-                std::cout << "|  open: | close: |  low: |  high: |  time: |" << std::endl;
-                std::cout << "| " << tempmap["listopen"][tempmap["listopen"].size() - 1] << " | " << tempmap["listclose"][tempmap["listclose"].size() - 1] << " | " << tempmap["listlow"][tempmap["listlow"].size() - 1] << " | " << tempmap["listhigh"][tempmap["listhigh"].size() - 1] << " | " << epoch_to_utc(tempmap["listtime"][tempmap["listtime"].size() - 1].asFloat()) << std::endl;
-                std::cout << std::endl;
-                //std::cout << "enter something" << std::endl;
-                prev_elapsed = elapsed;
-            }
-    } while(1 == 1);
 }
