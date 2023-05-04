@@ -12,4 +12,5 @@ To install use:
 2.) Change to the cloned directiory
 
 3.) Use the following command to compile....
+
     c++ ./output -lcurl -ljsoncpp
