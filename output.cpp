@@ -29,14 +29,20 @@ int main(void)
                 latest["high"] = tempmap["listhigh"][tempmap["listhigh"].size() - 1].asFloat();
                 latest["time"] = tempmap["listtime"][tempmap["listtime"].size() - 1].asFloat();
                 float length = (latest["open"] - latest["close"]);
+                std::vector<float> open_array;
+                for(int i = 0; i < tempmap["listopen"].size(); i++)
+                {
+                    open_array.push_back(tempmap["listopen"][i].asFloat());
+                }
                 system("clear");
+                // std::cout << open_array[open_array.size() - 1] << std::endl;
                 std::cout << "|  open: | close: |  low: |  high: |  time: |" << std::endl;
                 std::cout << "| " << latest["open"] << " | " << latest["close"] << " | " << latest["low"] << " | " << latest["high"] << " | " << epoch_to_utc(latest["time"]) << std::endl;
-                std::cout << std::endl;
+                draw_axis(open_array);
                 // std::cout << (latest["open"] - latest["close"]) << std::endl;
-                drawupperline(latest["high"], latest["open"], latest["close"], length);
-                drawbody(latest["open"], latest["close"], length);
-                drawlowerline(latest["low"], latest["open"], latest["close"], length);
+                // drawupperline(latest["high"], latest["open"], latest["close"], length);
+                // drawbody(latest["open"], latest["close"], length);
+                // drawlowerline(latest["low"], latest["open"], latest["close"], length);
                 //std::cout << "enter something" << std::endl;
                 prev_elapsed = elapsed;
             }
